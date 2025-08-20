@@ -24,6 +24,25 @@ import android.graphics.BitmapFactory
 import com.gaelraul.sharegallery.ui.viewmodel.ShareGalleryViewModel
 import com.gaelraul.sharegallery.data.model.Photo
 import com.gaelraul.sharegallery.ui.theme.*
+import java.text.SimpleDateFormat
+import java.util.*
+
+/**
+ * Formatea el timestamp para mostrar una fecha más legible
+ */
+private fun formatTimestamp(timestamp: Long): String {
+    return try {
+        val date = Date(timestamp)
+        val fullFormat = SimpleDateFormat("dd/MM/yyyy\nHH:mm", Locale.getDefault())
+        
+        // Siempre mostrar fecha y hora completa
+        fullFormat.format(date)
+    } catch (e: Exception) {
+        // Si hay error, mostrar fecha actual
+        val fallbackFormat = SimpleDateFormat("dd/MM HH:mm", Locale.getDefault())
+        fallbackFormat.format(Date())
+    }
+}
 
 @Composable
 fun TvScreen(
@@ -347,6 +366,7 @@ fun PhotoCard(photo: Photo) {
             Column(
                 modifier = Modifier.padding(12.dp)
             ) {
+                // Usuario con icono
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -376,19 +396,44 @@ fun PhotoCard(photo: Photo) {
                     )
                 }
                 
+                Spacer(modifier = Modifier.height(6.dp))
+                
+                // Fecha de subida destacada
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(20.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                            .background(
+                                MaterialTheme.colorScheme.secondaryContainer
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "📅",
+                            fontSize = 10.sp
+                        )
+                    }
+                    
+                    Text(
+                        text = formatTimestamp(photo.timestamp),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+                
                 Spacer(modifier = Modifier.height(4.dp))
                 
+                // Nombre del archivo
                 Text(
                     text = photo.fileName,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1
-                )
-                
-                Text(
-                    text = "Subida: ${photo.timestamp}",
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
+                    maxLines = 1
                 )
             }
         }
