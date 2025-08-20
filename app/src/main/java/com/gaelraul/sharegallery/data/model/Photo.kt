@@ -1,4 +1,4 @@
-package com.gaelraul.shared.data.model
+package com.gaelraul.sharegallery.data.model
 
 import java.util.UUID
 

@@ -1,9 +1,9 @@
-package com.gaelraul.shared.ui.viewmodel
+package com.gaelraul.sharegallery.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gaelraul.shared.data.model.Photo
-import com.gaelraul.shared.data.repository.PhotoRepository
+import com.gaelraul.sharegallery.data.model.Photo
+import com.gaelraul.sharegallery.data.repository.PhotoRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,11 +32,6 @@ class ShareGalleryViewModel(
     // Estado de error
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error.asStateFlow()
-    
-    init {
-        // Iniciar el stream de fotos en tiempo real
-        startPhotosStream()
-    }
     
     /**
      * Inicia el stream de fotos en tiempo real
@@ -67,21 +62,27 @@ class ShareGalleryViewModel(
         _error.value = null
         
         viewModelScope.launch {
-            val result = photoRepository.uploadPhoto(username, imageBase64, fileName)
-            
-            result.fold(
-                onSuccess = { photo ->
-                    _uiState.value = _uiState.value.copy(
-                        currentUsername = username,
-                        lastUploadedPhoto = photo
-                    )
-                    _isLoading.value = false
-                },
-                onFailure = { exception ->
-                    _error.value = "Error al subir foto: ${exception.message}"
-                    _isLoading.value = false
-                }
-            )
+            try {
+                // Subir a Firebase usando el repositorio
+                val result = photoRepository.uploadPhoto(username, imageBase64, fileName)
+                
+                result.fold(
+                    onSuccess = { photo ->
+                        _uiState.value = _uiState.value.copy(
+                            currentUsername = username,
+                            lastUploadedPhoto = photo
+                        )
+                        _isLoading.value = false
+                    },
+                    onFailure = { exception ->
+                        _error.value = "Error al subir foto: ${exception.message}"
+                        _isLoading.value = false
+                    }
+                )
+            } catch (e: Exception) {
+                _error.value = "Error al procesar imagen: ${e.message}"
+                _isLoading.value = false
+            }
         }
     }
     
@@ -103,18 +104,7 @@ class ShareGalleryViewModel(
      * Elimina una foto
      */
     fun deletePhoto(photoId: String) {
-        viewModelScope.launch {
-            val result = photoRepository.deletePhoto(photoId)
-            
-            result.fold(
-                onSuccess = {
-                    // La foto se eliminará automáticamente del stream
-                },
-                onFailure = { exception ->
-                    _error.value = "Error al eliminar foto: ${exception.message}"
-                }
-            )
-        }
+        _photos.value = _photos.value.filter { it.id != photoId }
     }
 }
 

@@ -1,6 +1,6 @@
-package com.gaelraul.shared.data.repository
+package com.gaelraul.sharegallery.data.repository
 
-import com.gaelraul.shared.data.model.Photo
+import com.gaelraul.sharegallery.data.model.Photo
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
