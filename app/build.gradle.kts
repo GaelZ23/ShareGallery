@@ -38,7 +38,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "2.0.21"
+        kotlinCompilerExtensionVersion = "1.5.8"
     }
 }
 
@@ -70,6 +70,10 @@ dependencies {
     
     // Navigation
     implementation(libs.navigation.compose)
+    
+    // Imágenes y Permisos
+    implementation(libs.coil.compose)
+    implementation(libs.accompanist.permissions)
     
     // Testing
     testImplementation(libs.junit)
