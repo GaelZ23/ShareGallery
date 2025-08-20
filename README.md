@@ -1,180 +1,125 @@
-# 📱📺 ShareGallery
+# 📱 ShareGallery
 
-Una aplicación Android para crear galerías compartidas en tiempo real entre dispositivos móviles y Android TV usando Firebase.
+Una aplicación moderna para compartir fotos en tiempo real entre dispositivos móviles y TV.
 
-## 🎯 Descripción del Proyecto
+## ✨ Características
 
-ShareGallery permite a los usuarios subir fotos desde sus teléfonos móviles y verlas en tiempo real en una TV Android. Cada foto se muestra junto al nombre de usuario que la subió, creando una experiencia social de galería compartida.
+### 🎨 Diseño Moderno y Atractivo
+- **Paleta de colores moderna**: Utiliza una combinación elegante de indigo, violeta y cyan
+- **Gradientes sutiles**: Efectos visuales suaves que mejoran la experiencia del usuario
+- **Bordes redondeados**: Diseño moderno con esquinas suaves
+- **Sombras y elevación**: Efectos de profundidad para una interfaz más rica
+- **Tipografía mejorada**: Sistema de tipografía consistente y legible
 
-## ✨ Características Principales
+### 📱 Pantalla Móvil
+- **Login elegante**: Pantalla de inicio con logo animado y gradientes
+- **Interfaz intuitiva**: Botones grandes y fáciles de usar
+- **Feedback visual**: Indicadores de carga y mensajes de estado
+- **Animaciones suaves**: Transiciones fluidas entre estados
+- **Diseño responsivo**: Se adapta a diferentes tamaños de pantalla
 
-- **📤 Subida de fotos** desde galería del móvil
-- **📺 Visualización en tiempo real** en Android TV
-- **👤 Sistema de usuarios** con nombres de usuario
-- **🔥 Sincronización en tiempo real** con Firebase
-- **📱 Multi-plataforma** (Móvil + TV)
-- **🎨 Interfaz moderna** con Jetpack Compose
+### 📺 Pantalla TV
+- **Galería en tiempo real**: Muestra fotos subidas desde móviles
+- **Grid adaptativo**: Organización automática de fotos
+- **Cards atractivas**: Diseño moderno para cada foto
+- **Estados visuales**: Carga, error y vacío bien diseñados
+- **Header destacado**: Título con gradiente y logo
 
-## 🏗️ Arquitectura del Proyecto
+### 🎭 Componentes Animados
+- **Botones con animación**: Efectos de escala y transiciones
+- **Indicadores de carga**: Animaciones suaves durante procesos
+- **Mensajes de éxito**: Notificaciones animadas
+- **Contenido con fade**: Apariciones y desapariciones suaves
 
-El proyecto está estructurado en módulos para una mejor organización y reutilización de código:
+## 🎨 Paleta de Colores
 
-```
-ShareGallery/
-├── :app/           # Módulo principal de la aplicación
-├── :shared/        # Lógica de negocio y Firebase (compartido)
-├── :mobile/        # Funcionalidades específicas para móvil
-└── :tv/            # Funcionalidades específicas para TV
-```
+### Tema Claro
+- **Primario**: Indigo moderno (#6366F1)
+- **Secundario**: Violeta (#8B5CF6)
+- **Terciario**: Cyan (#06B6D4)
+- **Fondo**: Gris muy claro (#FAFAFA)
+- **Superficie**: Blanco puro
 
-### **Módulos:**
+### Tema Oscuro
+- **Primario**: Indigo claro (#A5B4FC)
+- **Secundario**: Violeta claro (#C4B5FD)
+- **Terciario**: Cyan claro (#67E8F9)
+- **Fondo**: Azul muy oscuro (#0F172A)
+- **Superficie**: Azul oscuro (#1E293B)
 
-- **`:app`**: Aplicación principal que integra todos los módulos
-- **`:shared`**: Contiene la lógica de Firebase, modelos de datos y repositorios
-- **`:mobile`**: Interfaz y funcionalidades específicas para dispositivos móviles
-- **`:tv`**: Interfaz y funcionalidades específicas para Android TV
+## 🚀 Tecnologías
 
-## 🛠️ Tecnologías Utilizadas
+- **Jetpack Compose**: UI moderna y declarativa
+- **Material Design 3**: Sistema de diseño actualizado
+- **Firebase**: Base de datos en tiempo real
+- **Kotlin Coroutines**: Programación asíncrona
+- **MVVM Architecture**: Patrón de arquitectura limpia
 
-- **Kotlin 2.0.21** - Lenguaje de programación
-- **Jetpack Compose** - UI moderna declarativa
-- **Firebase Firestore** - Base de datos en tiempo real
-- **Firebase Storage** - Almacenamiento de imágenes
-- **Material Design 3** - Sistema de diseño
-- **MVVM Architecture** - Patrón de arquitectura
-- **Gradle 8.10.0** - Sistema de build
+## 📋 Requisitos
 
-## 📋 Requisitos del Sistema
+- Android 6.0 (API 23) o superior
+- Kotlin 1.8+
+- Android Studio Hedgehog o superior
 
-- **Android Studio**: Arctic Fox o superior
-- **Min SDK**: API 27 (Android 8.1)
-- **Target SDK**: API 35 (Android 15)
-- **Compile SDK**: API 35
-- **Java**: Versión 11
+## 🛠️ Instalación
 
-## 🚀 Instalación y Configuración
-
-### **1. Clonar el repositorio**
+1. Clona el repositorio:
 ```bash
 git clone https://github.com/tu-usuario/ShareGallery.git
-cd ShareGallery
 ```
 
-### **2. Abrir en Android Studio**
-- Abrir Android Studio
-- Seleccionar "Open an existing project"
-- Navegar a la carpeta del proyecto y seleccionarla
+2. Abre el proyecto en Android Studio
 
-### **3. Configurar Firebase**
-- Crear proyecto en [Firebase Console](https://console.firebase.google.com/)
-- Habilitar Firestore Database y Storage
-- Descargar `google-services.json` y colocarlo en la carpeta `app/`
-- Configurar reglas de seguridad en Firestore y Storage
+3. Configura Firebase:
+   - Crea un proyecto en Firebase Console
+   - Descarga `google-services.json` y colócalo en la carpeta `app/`
+   - Habilita Firestore Database
 
-### **4. Sincronizar proyecto**
-- Hacer clic en "Sync Project with Gradle Files"
-- Esperar a que se descarguen todas las dependencias
-
-### **5. Ejecutar la aplicación**
-- Conectar dispositivo Android o usar emulador
-- Hacer clic en "Run" (▶️)
-
-## 📱 Uso de la Aplicación
-
-### **En Móvil:**
-1. Ingresar nombre de usuario
-2. Seleccionar foto desde galería
-3. La foto se sube automáticamente a Firebase
-4. Aparece en la TV en tiempo real
-
-### **En TV:**
-1. Abrir la aplicación en Android TV
-2. Las fotos se muestran automáticamente
-3. Cada foto incluye el nombre del usuario
-4. Actualización en tiempo real
-
-## 🔧 Configuración de Firebase
-
-### **Firestore Database:**
-```javascript
-// Reglas básicas de seguridad
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /photos/{photoId} {
-      allow read, write: if true; // Para desarrollo
-    }
-  }
-}
+4. Ejecuta la aplicación:
+```bash
+./gradlew assembleDebug
 ```
 
-### **Storage:**
-```javascript
-// Reglas básicas de seguridad
-rules_version = '2';
-service firebase.storage {
-  match /b/{bucket}/o {
-    match /{allPaths=**} {
-      allow read, write: if true; // Para desarrollo
-    }
-  }
-}
-```
+## 📱 Uso
 
-## 📁 Estructura de Datos
+### Móvil
+1. Abre la aplicación en tu dispositivo móvil
+2. Ingresa tu nombre de usuario
+3. Selecciona una foto de tu galería
+4. Sube la foto para compartirla
 
-### **Colección Photos:**
-```json
-{
-  "id": "auto-generated",
-  "username": "nombre_usuario",
-  "imageUrl": "https://firebase-storage-url",
-  "timestamp": "2024-01-01T00:00:00Z",
-  "fileName": "photo_123.jpg"
-}
-```
+### TV
+1. Abre la aplicación en tu dispositivo Android TV
+2. Las fotos subidas desde móviles aparecerán automáticamente
+3. Disfruta de la galería en tiempo real
 
-## 🚧 Estado del Proyecto
+## 🎨 Personalización
 
-- [x] Configuración base del proyecto
-- [x] Configuración de Jetpack Compose
-- [x] Configuración de Firebase
-- [ ] Implementación de modelos de datos
-- [ ] Interfaz de usuario móvil
-- [ ] Interfaz de usuario TV
-- [ ] Funcionalidad de subida de fotos
-- [ ] Sincronización en tiempo real
-- [ ] Testing y optimización
+### Colores
+Los colores se pueden personalizar en `app/src/main/java/com/gaelraul/sharegallery/ui/theme/Color.kt`
+
+### Tipografía
+La tipografía se puede modificar en `app/src/main/java/com/gaelraul/sharegallery/ui/theme/Type.kt`
+
+### Componentes
+Los componentes animados están en `app/src/main/java/com/gaelraul/sharegallery/ui/components/AnimatedComponents.kt`
 
 ## 🤝 Contribuir
 
-Este es un proyecto escolar, pero si quieres contribuir:
-
 1. Fork el proyecto
-2. Crear una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
 3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
 4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abrir un Pull Request
+5. Abre un Pull Request
 
 ## 📄 Licencia
 
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para detalles.
 
 ## 👨‍💻 Autor
 
-**Gael Raul** - Proyecto escolar de desarrollo Android
-
-## 🙏 Agradecimientos
-
-- Google por Android y Firebase
-- JetBrains por Kotlin
-- La comunidad de Android por las librerías utilizadas
-
-## 📞 Contacto
-
-- **Proyecto**: [ShareGallery](https://github.com/tu-usuario/ShareGallery)
-- **Issues**: [Reportar problemas](https://github.com/tu-usuario/ShareGallery/issues)
+**Gael Raul** - [@gaelraul](https://github.com/gaelraul)
 
 ---
 
-**⭐ Si te gusta el proyecto, dale una estrella en GitHub!**
+⭐ Si te gusta este proyecto, ¡dale una estrella!

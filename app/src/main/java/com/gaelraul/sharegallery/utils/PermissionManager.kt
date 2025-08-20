@@ -44,7 +44,7 @@ object PermissionManager {
     /**
      * Verifica si debemos mostrar explicación del permiso
      */
-    fun shouldShowPermissionRationale(context: Context): Boolean {
+    fun shouldShowPermissionRationale(): Boolean {
         // Por ahora retornamos false, pero se puede implementar lógica más compleja
         return false
     }

@@ -62,6 +62,8 @@ dependencies {
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material3)
     implementation(libs.compose.activity)
+    implementation(libs.compose.animation)
+    implementation(libs.compose.foundation)
     
     // Firebase
     implementation(platform(libs.firebase.bom))
