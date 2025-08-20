@@ -43,6 +43,7 @@ fun MobileScreen(
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     var isUploading by remember { mutableStateOf(false) }
     var uploadMessage by remember { mutableStateOf("") }
+    var showUserGallery by remember { mutableStateOf(false) }
     
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -93,63 +94,73 @@ fun MobileScreen(
                     }
                 )
             } else {
-                // Pantalla principal después del login
-                MainMobileScreen(
-                    username = username,
-                    selectedImageUri = selectedImageUri,
-                    isUploading = isLoading,
-                    uploadMessage = uploadMessage,
-                    onSelectPhoto = {
-                        if (PermissionManager.hasGalleryPermission(context)) {
-                            imagePicker.launch("image/*")
-                        } else {
-                            onRequestPermission(PermissionManager.getRequiredPermission())
-                        }
-                    },
-                    onUploadPhoto = {
-                        selectedImageUri?.let { uri ->
-                            // Subida real a Firebase
-                            scope.launch {
-                                try {
-                                    isUploading = true
-                                    uploadMessage = "Subiendo imagen a Firebase..."
-                                    
-                                    // Convertir URI a Base64
-                                    val imageBytes = ImagePicker.uriToBytes(context, uri)
-                                    
-                                    if (imageBytes != null) {
-                                        // Convertir bytes a Base64
-                                        val imageBase64 = android.util.Base64.encodeToString(imageBytes, android.util.Base64.DEFAULT)
+                if (showUserGallery) {
+                    // Pantalla de galería personal
+                    UserGalleryScreen(
+                        username = username,
+                        onBackToMain = { showUserGallery = false }
+                    )
+                } else {
+                    // Pantalla principal después del login
+                    MainMobileScreen(
+                        username = username,
+                        selectedImageUri = selectedImageUri,
+                        isUploading = isLoading,
+                        uploadMessage = uploadMessage,
+                        onSelectPhoto = {
+                            if (PermissionManager.hasGalleryPermission(context)) {
+                                imagePicker.launch("image/*")
+                            } else {
+                                onRequestPermission(PermissionManager.getRequiredPermission())
+                            }
+                        },
+                        onUploadPhoto = {
+                            selectedImageUri?.let { uri ->
+                                // Subida real a Firebase
+                                scope.launch {
+                                    try {
+                                        isUploading = true
+                                        uploadMessage = "Subiendo imagen a Firebase..."
                                         
-                                        // Subir a Firebase usando el ViewModel
-                                        viewModel.uploadPhoto(
-                                            username = username,
-                                            imageBase64 = imageBase64,
-                                            fileName = ImagePicker.getFileName(context, uri)
-                                        )
+                                        // Convertir URI a Base64
+                                        val imageBytes = ImagePicker.uriToBytes(context, uri)
                                         
-                                        // Limpiar selección
-                                        selectedImageUri = null
-                                        uploadMessage = "¡Imagen subida exitosamente!"
-                                    } else {
-                                        uploadMessage = "Error: No se pudo leer la imagen"
+                                        if (imageBytes != null) {
+                                            // Convertir bytes a Base64
+                                            val imageBase64 = android.util.Base64.encodeToString(imageBytes, android.util.Base64.DEFAULT)
+                                            
+                                            // Subir a Firebase usando el ViewModel
+                                            viewModel.uploadPhoto(
+                                                username = username,
+                                                imageBase64 = imageBase64,
+                                                fileName = ImagePicker.getFileName(context, uri)
+                                            )
+                                            
+                                            // Limpiar selección
+                                            selectedImageUri = null
+                                            uploadMessage = "¡Imagen subida exitosamente!"
+                                        } else {
+                                            uploadMessage = "Error: No se pudo leer la imagen"
+                                        }
+                                    } catch (e: Exception) {
+                                        uploadMessage = "Error al subir: ${e.message}"
+                                    } finally {
+                                        isUploading = false
                                     }
-                                } catch (e: Exception) {
-                                    uploadMessage = "Error al subir: ${e.message}"
-                                } finally {
-                                    isUploading = false
                                 }
                             }
+                        },
+                        onShowGallery = { showUserGallery = true },
+                        onLogout = { 
+                            isLoggedIn = false
+                            username = ""
+                            selectedImageUri = null
+                            uploadMessage = ""
+                            showUserGallery = false
+                            viewModel.setCurrentUsername("")
                         }
-                    },
-                    onLogout = { 
-                        isLoggedIn = false
-                        username = ""
-                        selectedImageUri = null
-                        uploadMessage = ""
-                        viewModel.setCurrentUsername("")
-                    }
-                )
+                    )
+                }
             }
         }
     }
@@ -274,6 +285,7 @@ fun MainMobileScreen(
     uploadMessage: String,
     onSelectPhoto: () -> Unit,
     onUploadPhoto: () -> Unit,
+    onShowGallery: () -> Unit,
     onLogout: () -> Unit
 ) {
     Column(
@@ -307,34 +319,56 @@ fun MainMobileScreen(
             }
         }
         
-        // Botón para seleccionar foto con diseño mejorado
-        AnimatedFadeInContent(visible = true) {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(20.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+        // Botones de acción - Versión simple
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            // Botón para seleccionar foto
+            Button(
+                onClick = onSelectPhoto,
+                modifier = Modifier
+                    .weight(1f)
+                    .height(64.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                )
             ) {
-                Button(
-                    onClick = onSelectPhoto,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(64.dp),
-                    shape = RoundedCornerShape(20.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    )
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text("📸", fontSize = 24.sp)
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Text(
-                            "Seleccionar foto", 
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    }
+                    Text("📸", fontSize = 24.sp)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        "Subir foto", 
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            }
+            
+            // Botón para ver galería personal
+            Button(
+                onClick = onShowGallery,
+                modifier = Modifier
+                    .weight(1f)
+                    .height(64.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondary
+                )
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("🖼️", fontSize = 24.sp)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        "Mi galería", 
+                        style = MaterialTheme.typography.titleMedium
+                    )
                 }
             }
         }

@@ -104,7 +104,29 @@ class ShareGalleryViewModel(
      * Elimina una foto
      */
     fun deletePhoto(photoId: String) {
-        _photos.value = _photos.value.filter { it.id != photoId }
+        viewModelScope.launch {
+            try {
+                _isLoading.value = true
+                _error.value = null
+                
+                // Eliminar de Firebase usando el repositorio
+                val result = photoRepository.deletePhoto(photoId)
+                
+                result.fold(
+                    onSuccess = {
+                        // La foto se eliminará automáticamente del stream
+                        _isLoading.value = false
+                    },
+                    onFailure = { exception ->
+                        _error.value = "Error al eliminar foto: ${exception.message}"
+                        _isLoading.value = false
+                    }
+                )
+            } catch (e: Exception) {
+                _error.value = "Error al eliminar foto: ${e.message}"
+                _isLoading.value = false
+            }
+        }
     }
 }
 
