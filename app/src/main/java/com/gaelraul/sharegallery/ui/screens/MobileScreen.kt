@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -25,6 +26,10 @@ import com.gaelraul.sharegallery.ui.components.AnimatedLoadingButton
 import com.gaelraul.sharegallery.ui.components.AnimatedFadeInContent
 import kotlinx.coroutines.launch
 import android.util.Base64
+import androidx.compose.foundation.Image
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import android.graphics.BitmapFactory
 
 @Composable
 fun MobileScreen(
@@ -334,40 +339,107 @@ fun MainMobileScreen(
             }
         }
         
-        // Mostrar imagen seleccionada
+        // Previsualización de la imagen seleccionada
         selectedImageUri?.let { uri ->
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(20.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
-            ) {
-                Column(
-                    modifier = Modifier.padding(20.dp)
+            AnimatedFadeInContent(visible = true) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(20.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
                 ) {
-                    Text(
-                        text = "Imagen seleccionada:",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    
-                    Text(
-                        text = uri.lastPathSegment ?: "Sin nombre",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
-                    
-                    Spacer(modifier = Modifier.height(16.dp))
-                    
-                    // Botón para subir foto
-                    AnimatedLoadingButton(
-                        text = "🚀 Subir a la galería",
-                        isLoading = isUploading,
-                        onClick = onUploadPhoto,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(52.dp)
-                    )
+                    Column(
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        // Título de la sección
+                        Text(
+                            text = "Previsualización:",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.padding(bottom = 12.dp)
+                        )
+                        
+                        // Imagen previsualizada
+                        val context = LocalContext.current
+                        val imageBitmap = remember(uri) {
+                            try {
+                                val inputStream = context.contentResolver.openInputStream(uri)
+                                val bitmap = BitmapFactory.decodeStream(inputStream)
+                                bitmap?.asImageBitmap()
+                            } catch (e: Exception) {
+                                null
+                            }
+                        }
+                        
+                        if (imageBitmap != null) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(200.dp)
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                            ) {
+                                Image(
+                                    bitmap = imageBitmap,
+                                    contentDescription = "Previsualización de imagen",
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentScale = ContentScale.Crop
+                                )
+                            }
+                        } else {
+                            // Placeholder si no se puede cargar la imagen
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(200.dp)
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .background(
+                                        brush = Brush.linearGradient(
+                                            colors = listOf(
+                                                MaterialTheme.colorScheme.surfaceVariant,
+                                                MaterialTheme.colorScheme.outlineVariant
+                                            )
+                                        )
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Text(
+                                        text = "🖼️",
+                                        fontSize = 48.sp
+                                    )
+                                    Text(
+                                        text = "No se pudo cargar la imagen",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
+                        }
+                        
+                        Spacer(modifier = Modifier.height(12.dp))
+                        
+                        // Información del archivo
+                        Text(
+                            text = "Archivo: ${uri.lastPathSegment ?: "Sin nombre"}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        
+                        Spacer(modifier = Modifier.height(16.dp))
+                        
+                        // Botón para subir foto
+                        AnimatedLoadingButton(
+                            text = "🚀 Subir a la galería",
+                            isLoading = isUploading,
+                            onClick = onUploadPhoto,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(52.dp)
+                        )
+                    }
                 }
             }
         }
