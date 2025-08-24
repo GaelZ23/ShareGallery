@@ -30,6 +30,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import android.graphics.BitmapFactory
+import androidx.compose.ui.res.painterResource
+import com.gaelraul.sharegallery.R
 
 @Composable
 fun MobileScreen(
@@ -335,17 +337,21 @@ fun MainMobileScreen(
                     containerColor = MaterialTheme.colorScheme.primary
                 )
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text("📸", fontSize = 24.sp)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        "Subir foto", 
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                }
+                                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_camera),
+                                contentDescription = "Cámara",
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                "Subir foto", 
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                        }
             }
             
             // Botón para ver galería personal
@@ -359,17 +365,21 @@ fun MainMobileScreen(
                     containerColor = MaterialTheme.colorScheme.secondary
                 )
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text("🖼️", fontSize = 24.sp)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        "Mi galería", 
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                }
+                                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_gallery),
+                                contentDescription = "Galería",
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                "Mi galería", 
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                        }
             }
         }
         
