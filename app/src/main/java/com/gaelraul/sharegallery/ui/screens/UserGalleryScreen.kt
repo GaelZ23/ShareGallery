@@ -26,6 +26,8 @@ import com.gaelraul.sharegallery.data.model.Photo
 import com.gaelraul.sharegallery.ui.theme.*
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.compose.ui.res.painterResource
+import com.gaelraul.sharegallery.R
 
 @Composable
 fun UserGalleryScreen(
@@ -321,9 +323,11 @@ fun UserPhotoCard(
                         MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.9f)
                     )
             ) {
-                Text(
-                    text = "🗑️",
-                    fontSize = 16.sp
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_delete),
+                    contentDescription = "Eliminar",
+                    modifier = Modifier.size(20.dp),
+                    tint = MaterialTheme.colorScheme.onErrorContainer
                 )
             }
             
